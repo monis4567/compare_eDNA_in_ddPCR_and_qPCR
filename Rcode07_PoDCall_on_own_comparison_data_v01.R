@@ -227,7 +227,7 @@ set_of_spc.Abbr <- c("Mnelei","Erisin","Bonham","Calsap")
 # get the total number of elements in the vector containing species 
 # abbreviations names
 nspcAbr <- length(set_of_spc.Abbr)
-nspcAbr <- 2
+#nspcAbr <- 2
 # make an empty list that plots can be collected in
 lst_plts <- list()
 # iterate over elements in the vector of numbers for species abbreviations
@@ -456,7 +456,9 @@ PDCe_dd.01$stdllvl <- ssht01.stds$stdllvl[match(PDCe_dd.01$wellID, ssht01.stds$w
 PDCe_dd.01$stdllvl[is.na(PDCe_dd.01$stdllvl)] <- 'NegC'
 # Now make a plot only based on this subsetted version of the data frame
 # now you can control the gplot2 elements yourself
-plt02 <- ggplot(data = PDCe_dd.01) + 
+plt02 <- 
+  
+  ggplot(data = PDCe_dd.01) + 
   theme_bw() +
   geom_point(aes(x = seq_len(nrow(PDCe_dd.01)),
                  y = Amplitudes, group = wellID, 
@@ -519,6 +521,10 @@ n <- length(lst_plts)
 nCol <- floor(sqrt(n))
 plt02 <- do.call("grid.arrange", c(lst_plts, ncol=nCol))
 
+str(lst_plts)
+summary(lst_plts[[2]])
+lst_plts2 <- unlist(lst_plts)
+lst_plts2[2]
 #lst_plts[[1]]
 plt02
 # cowplot::plot_grid(plotlist = lst_plts, ncol = 2)
@@ -530,5 +536,5 @@ plt02
 
 plt02
 
-
+# https://stackoverflow.com/questions/31993704/storing-ggplot-objects-in-a-list-from-within-loop-in-r
 
