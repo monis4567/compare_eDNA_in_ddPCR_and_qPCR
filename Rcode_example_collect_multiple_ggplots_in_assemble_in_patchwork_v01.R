@@ -1,8 +1,18 @@
+#!/usr/bin/env Rscript
+# -*- coding: utf-8 -*-
+
+#dev.off()
+
+########################################################################################
+#remove everything in the working environment, without a warning!!
+rm(list=ls())
+
+
 # example on collection of ggplots
 # while iterating over subsetted  data frames 
 # i.e. -  iterating over different input files
 # for getting different  data frames 
-
+library(ggplot2)
 mtcars2 <- mtcars
 mtcars2 <- mtcars2[grepl("Merc",row.names(mtcars2)),]
 mtcars2$wellID <- mtcars2$setNm
@@ -16,7 +26,7 @@ mtcars2$Amplitudes <- mtcars2$v2
 mtcars2$setNm<- sample((LETTERS[1:4]), 300, replace = T)
 mtcars2$wellID <- mtcars2$carNm
 mtcars2$stdllvl <- mtcars2$carNm
-
+ch <- 1
 chCol <- c("dodgerblue3", "forestgreen")
 channel <- ch
 # make a vector of the species abbreviations to iterate over
