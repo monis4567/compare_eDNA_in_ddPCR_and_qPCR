@@ -222,6 +222,8 @@ spc.Abbr_iso <- "Erisin"
 
 # make a vector of the species abbreviations to iterate over
 set_of_spc.Abbr <- c("Mnelei","Erisin","Bonham","Calsap","Promin","Psever")
+#set_of_spc.Abbr <- c("Psever", "Psefar")
+#set_of_spc.Abbr <- c("Psefar")
 # get the total number of elements in the vector containing species 
 # abbreviations names
 nspcAbr <- length(set_of_spc.Abbr)
@@ -351,9 +353,12 @@ ampData <- lapply(ampData, dplyr::mutate_if, is.character, as.numeric)
 ## Now that the amp data is ensured to have only numeric values, the next 
 ## step is to 
 ## Calculate thresholds, metrics, concentrations
-thresholdTable <- podcallThresholds(plateData=ampData, 
+thresholdTable <- PoDCall::podcallThresholds(plateData=ampData, 
                                      #nchannels=c(1,2)[2],
-                                    B=100, refWell = 3)
+                                    B=200, 
+                                    Q=9,
+                                    refWell = 1)
+
 #print(thresholdTable)
 thrTable <- thresholdTable
 
@@ -551,10 +556,42 @@ library(tidyverse)
 library(gtable)
 library(grid)
 library(patchwork)
+#define working directory
+#wd00.1 ="/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2021/MONIS6"
+wd00.1 ="/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR/MONIS6_2021_data"
+
+#define input directory
+wd01.1 <- "output02_merged_txtfiles_from_mxpro_for_MONIS6"
+wd02.1 <- paste(wd00.1,"/",wd01.1,sep="")
+#define inputfile
+inpf01 <- "outfile02_merged_mxpro_csvfls_MONIS6.csv"
+#paste path and input file together
+if01wp <- paste(wd02.1,"/",inpf01,sep="")
+# read in an xlsx file with all primer assays listed 
+# for each species anmd the abbreviations
+inf04 <- "list_of_specific_assays_MONIS6.xlsx"
+wd00.1_inf04 <- paste0(wd00.1,"/",inf04 )
+library(xlsx)
+df_dtc_asss <- xlsx::read.xlsx(wd00.1_inf04,1)
+
+# length Latin Genus and Species names
+df_PDCes$GnNm <-  df_dtc_asss$Genus[match(df_PDCes$spc.Abbr,df_dtc_asss$AbbrvNm)]
+df_PDCes$SpNm <-  df_dtc_asss$Species[match(df_PDCes$spc.Abbr,df_dtc_asss$AbbrvNm)]
+df_PDCes$GnNmLt <- substr(df_PDCes$GnNm, 1, 1)
+df_PDCes$speciesNm <- paste0(df_PDCes$GnNmLt,". ",df_PDCes$SpNm)
+#unique(df_PDCes$speciesNm)
+
 # use the multiple plots setup on the actual data
 #  PDCe_dd.01$chCol 
 p2 <- ggplot(data = df_PDCes) + 
-  theme_bw() +
+  # # justify to the left margin
+  theme_minimal() +
+  # 
+  #   #https://stackoverflow.com/questions/62009919/facet-title-alignment-using-facet-wrap-in-ggplot2
+  #   theme(strip.text.x = element_text(hjust = 0, margin=margin(l=0)),
+  #         panel.background = element_rect(fill = "grey99",
+  #                                         color = "white")) +
+  
   geom_point(aes(x = seq_len(nrow(df_PDCes)),
                  y = Amplitudes, group = wellID, 
                  color = col),size = 1) + 
@@ -564,8 +601,8 @@ p2 <- ggplot(data = df_PDCes) +
         axis.ticks.x = element_blank(), 
         legend.position = "none") +
   geom_hline(#data = thrDfCh.01, 
-             aes(yintercept = thrCh), 
-             col = "magenta") + 
+    aes(yintercept = thrCh), 
+    col = "magenta") + 
   scale_color_manual(labels = c("neg", 
                                 "pos"), 
                      values = c("gray50", 
@@ -583,24 +620,31 @@ p2 <- ggplot(data = df_PDCes) +
   #ggtitle("nice plot")
   ggtitle(" ")
 
-  
+
 g <- ggplot_gtable(ggplot_build(p2))
 
 stript <- grep("strip", g$layout$name)
 
 grid_cols <- sort(unique(g$layout[stript,]$l))
-t_vals <- rep(sort(unique(g$layout[stript,]$t)), each = length(grid_cols)/8)
-l_vals <- rep(grid_cols[seq_along(grid_cols) %% 8 == 1], length = length(t_vals))
-r_vals <- rep(grid_cols[seq_along(grid_cols) %% 8 == 0], length = length(t_vals))
-labs   <- levels(as.factor(p2$data$spc.Abbr))
+t_vals <- rep(sort(unique(g$layout[stript,]$t)), 
+              each = length(grid_cols)/8)
+l_vals <- rep(grid_cols[seq_along(grid_cols) %% 8 == 1], 
+              length = length(t_vals))
+r_vals <- rep(grid_cols[seq_along(grid_cols) %% 8 == 0], 
+              length = length(t_vals))
+labs   <- levels(as.factor(p2$data$speciesNm))
 
 for(i in seq_along(labs))
 {
-  filler <- rectGrob(y = 0.7, height = 0.6, gp = gpar(fill = "gray80", col = NA))
-  tg    <- textGrob(label = labs[i], y = 0.75, gp = gpar(cex = 0.8))
-  g     <- gtable_add_grob(g, filler, t = t_vals[i], l = l_vals[i], r = r_vals[i], 
+  filler <- rectGrob(y = 0.7, height = 0.6, just = "centre",
+                     gp = gpar(fill = "grey76", col = NA))
+  tg    <- textGrob(label = labs[i], y = 0.75, just = "left",
+                    gp = gpar(cex = 0.8))
+  g     <- gtable_add_grob(g, filler, 
+                           t = t_vals[i], l = l_vals[i], r = r_vals[i], 
                            name = paste0("filler", i))
-  g     <- gtable_add_grob(g, tg, t = t_vals[i], l = l_vals[i], r = r_vals[i], 
+  g     <- gtable_add_grob(g, tg, 
+                           t = t_vals[i], l = l_vals[i], r = r_vals[i], 
                            name = paste0("textlab", i))
 }
 

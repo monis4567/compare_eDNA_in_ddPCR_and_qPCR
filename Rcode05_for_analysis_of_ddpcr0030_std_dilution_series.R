@@ -76,7 +76,7 @@ df_ddP$stdlvl[is.na(df_ddP$stdlvl)] <- 0
 df_ddP$stdlvl[!df_ddP$Sample.description.8=="STD"] <- NA
 df_ddP$stdlvl <- as.numeric(df_ddP$stdlvl)
 df_ddP$Sample.description.1 <- df_ddP$Sample.description.8
-
+# View(df_ddP)
 # spcAbbr <- df_ddP$Sample.description.7[df_ddP$Sample.description.8=="STD"]
 # spcAbbr <- sapply(strsplit(spcAbbr,"_"), "[[", 1)
 # df_ddP$spcAbbr <- df_ddP$Sample.description.6
@@ -110,7 +110,8 @@ df_e02 <- df_e02[(df_e02$Quantitycopies > df_e02$loq.val_max),]
 require(dplyr)
 #  I used 3 uL template, this means the original sample contains 1/3
 df_e02$cppuL <- as.numeric(df_e02$Quantitycopies/3)
-#head(df_e02,4)
+# head(df_e02,4)
+# unique(df_e02$speciesabbr)
 df_e02$cppuL[is.na(df_e02$cppuL)] <- 0
 # make the column with 'Conc.copies.µL.' numeric
 df_ddP$Conc.copies.µL. <- as.numeric(df_ddP$Conc.copies.µL.)
@@ -192,17 +193,19 @@ df_f2$spNms2 <- df_f2$spNms
 df_f2$spNms2 <- gsub("PsFa28" ,"Psefar" ,df_f2$spNms2)
 df_f2$spNms2 <- gsub("PsVe28" ,"Psever" ,df_f2$spNms2)
 spNms3 <- df_f2$spNms2
+# unique(df_e02$speciesabbr)
 # match back to get factor for conversion for qPCR measurements
 df_e02$f2 <- df_f2$lstg1[match(df_e02$speciesabbr,df_f2$spNms2)]
 df_e02$f2 <- as.numeric(df_e02$f2)
 #View(df_e02)
-# only retain standard dilutoin series
+# only retain standard dilution series
 df_e02 <- df_e02[df_e02$WellType=="Standard",]
 # qlod <- min(expstd[expstd>=1E1])
 #factor
 # modify the copy count in the qPCR 
 df_e02$cppuLm <- df_e02$cppuL*df_e02$f2
-# use dplyr to select columns and group by these columns, and # then tak the mean, the stddev, and stderr
+# use dplyr to select columns and group by these columns, and
+# then take the mean, the stddev, and stderr
 df_e03 <- df_e02 %>%
   dplyr::select(Replicate, speciesabbr, cppuLm,smpltp,WellType ) %>% 
   dplyr::group_by(Replicate,speciesabbr,smpltp) %>%
