@@ -235,7 +235,7 @@ for (ns in sqnsets) {
 
 ns <- 4
 ns <- 5
-ns <- 6
+#ns <- 6
 ns <- 3
 #}
 # get the index numbers for the species
