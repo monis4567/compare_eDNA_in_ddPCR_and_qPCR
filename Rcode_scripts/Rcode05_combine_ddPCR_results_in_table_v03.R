@@ -22,8 +22,6 @@ library(readr) # Load readr package
 
 library("rnaturalearthhires")
 # #define working directory
-# wd00 <- "/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2022/ddPCR_qPCR_MST"
-# wd00  <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
 wd00 <- getwd()
 #define input file  directory
 wd01 <- "data/data_ddpcr_runs"

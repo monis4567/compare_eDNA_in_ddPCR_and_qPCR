@@ -10,9 +10,6 @@ library(tidyr)
 library(ggplot2)
 library(scales)
 # #define working directory
-# wd00 <- "/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2022/ddPCR_qPCR_MST"
-# wd00 <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
-
 wd00 <- getwd()
 #define input file  directory
 wd01 <- "data/data_ddpcr_runs"
@@ -84,8 +81,6 @@ df_ddP$spcAbbr <- df_ddP$Sample.description.9
 # Read in file from MxPro qPCR analysis
 #define working directory
 wd00.1 = paste0(wd00,"/data/MONIS6_2021_data")
-
-#wd00 <- "/Users/steenknudsen/Documents/Documents/NIVA_Ansaettelse_2020/NOVANA_proever_2018_2019"
 #define input directory
 wd01.1 <- "output02_merged_txtfiles_from_mxpro_for_MONIS6"
 wd02.1 <- paste(wd00.1,"/",wd01.1,sep="")

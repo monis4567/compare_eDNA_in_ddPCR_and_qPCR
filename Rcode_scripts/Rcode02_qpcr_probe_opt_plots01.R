@@ -4,7 +4,7 @@
 #____________________________________________________________________________#
 # R-code  for :
 # “Probe optimization curves from qPCR MxPro txt files”
-# Authors: Steen Wilhelm Knudsen.
+
 
 # Change the working directory to a path on your own computer , and run
 # the individual parts below to reproduce the diagrams presented in the paper

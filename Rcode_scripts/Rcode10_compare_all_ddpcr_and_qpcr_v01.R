@@ -34,9 +34,6 @@ library(tidyverse)
 #install.packages("openxlsx")
 library(openxlsx)
 #define working directory
-
-# wd00 <- "/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2022/ddPCR_qPCR_MST"
-# wd00  <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
 wd00 <- getwd()
 #define input file  directory
 wd01 <- "data/data_ddpcr_runs"
@@ -125,9 +122,7 @@ df_ddP$stdlvl <- as.numeric(df_ddP$stdlvl)
 df_ddP$Sample.description.1 <- df_ddP$Sample.description.6
 # Read in file from MxPro qPCR analysis
 #define working directory
-#wd00.1 ="/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2021/MONIS6"
 wd00.1 =paste0(wd00,"/data/MONIS6_2021_data")
-#wd00 <- "/Users/steenknudsen/Documents/Documents/NIVA_Ansaettelse_2020/NOVANA_proever_2018_2019"
 #define input directory
 wd01.1 <- "output02_merged_txtfiles_from_mxpro_for_MONIS6"
 wd02.1 <- paste(wd00.1,"/",wd01.1,sep="")
@@ -1772,11 +1767,8 @@ df_e08$Dato_inds.yy <- as.numeric(gsub("([0-9]{4})-([0-9]{2})-([0-9]{2})",
 # to an NA filled column
 df_e08$ssn.smpl <- NA
 
-# df_e08$ssn.smpl[(df_e08$Dato_inds.mm>7)] <- "1st_season_Jan_to_Jun"
-# df_e08$ssn.smpl[(df_e08$Dato_inds.mm<7)] <- "2nd_season_Jul_to_Nov"
-
-df_e08$ssn.smpl[(df_e08$Dato_inds.mm>7)] <- "1st_season"
-df_e08$ssn.smpl[(df_e08$Dato_inds.mm<7)] <- "2nd_season"
+df_e08$ssn.smpl[(df_e08$Dato_inds.mm>=7)] <- "2nd_season"
+df_e08$ssn.smpl[(df_e08$Dato_inds.mm<7)] <- "1st_season"
 library(RColorBrewer)
 RColorBrewer::display.brewer.all(colorblindFriendly = TRUE)      # Show all color palettes
 
@@ -2229,3 +2221,115 @@ write.csv(df_e12,
 # #
 # # https://www.urbandemographics.org/post/figures-map-layers-r/
 
+#View(df_dtc_asss)
+# get the first 3 characters of the string
+df_dtc_asss$gn.abbr <- substr(df_dtc_asss$Genus,1,3)
+df_dtc_asss$sp.abbr <- substr(df_dtc_asss$Species,1,3)
+# paste together the two strings with no space
+df_dtc_asss$speciesabbr <- paste0(df_dtc_asss$gn.abbr,df_dtc_asss$sp.abbr)
+# exclude if there is no 'Fprimseq'
+# if it is NA
+df_das <- df_dtc_asss[!is.na(df_dtc_asss$Fprimseq),]
+# use left_join to add 'df_das' to the  'df_e06.sb'
+# data frame
+df_e06 <- left_join(df_e06.sb, 
+                    df_das, by=c("speciesabbr"="speciesabbr"))
+# check if the join worked
+#View(df_e06)
+
+# exclude row if 'mcp_ddPCR' is zero
+df_e06 <- df_e06[df_e06$mcp_ddPCR>0,]
+# exclude row if 'mcp_qPCR' is zero
+df_e06 <- df_e06[df_e06$mcp_qPCR>0,]
+
+max(df_e06$TargetFraglngt)
+unique(df_e06$TargetFraglngt)
+#df_e06.sb
+#View(df_e06.sb)
+plt08 <- ggplot(data=df_e06, aes(x=mcp_qPCR ,
+                                 y=mcp_ddPCR) ) +
+  theme_minimal() +
+  #https://stackoverflow.com/questions/62009919/facet-title-alignment-using-facet-wrap-in-ggplot2
+  theme(strip.text.x = element_text(hjust = 0, margin=margin(l=0)),
+        panel.background = element_rect(fill = "grey99",
+                                        color = "white")) +
+  scale_y_log10(limits=c(1e-2, 1e5),
+                breaks = scales::trans_breaks("log10", function(y) 10^y),
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  theme(panel.background = element_rect(fill = "transparent")) +
+  scale_x_log10(limits=c(1e-2, 1e5),
+                breaks = scales::trans_breaks("log10", function(x) 10^x),
+                labels = scales::trans_format("log10", scales::math_format(10^.x))) +
+  theme(panel.background = element_rect(fill = "transparent")) +
+  # add horizontal lines to show decades on y-axis
+  geom_hline(yintercept=1E5, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E4, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E3, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E2, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E1, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E0, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E-1, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_hline(yintercept=1E-2, color=scales::alpha("gray53",0.4), size=0.12) +
+  # add horizontal lines to show decades on y-axis
+  geom_vline(xintercept=1E5, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E4, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E3, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E2, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E1, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E0, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E-1, color=scales::alpha("gray53",0.4), size=0.12) +
+  geom_vline(xintercept=1E-2, color=scales::alpha("gray53",0.4), size=0.12) +
+  #xlab("antal eDNA molekyler /uL i qPCR") + ylab("antal eDNA molekyler /uL i ddPCR") +
+  xlab("eDNA in qPCR (molecules/uL)") + ylab("eDNA in ddPCR (molecules/uL)") +
+  annotation_logticks(sides="bl") +
+  # plot the points above all the other vlines
+  geom_point(aes(fill=TargetFraglngt, 
+                 shape=smplTp), size=4.4) + 
+  scale_shape_manual(values = c(21, 24)) +
+  scale_fill_viridis_c(option = "D",direction=-1) +
+  #scale_fill_manual(values=c("violet", "yellow")) +
+  geom_errorbar(aes(ymin =  sdmn_ddPCR,ymax =  sdmx_ddPCR)) + 
+  geom_errorbarh(aes(xmin =sdmn_qPCR,xmax = sdmx_qPCR)) +
+  
+  geom_abline(intercept = 0, slope = 1, color="blue",size=0.22,lty=2) +
+  #           angle=90,label = "qLOQ", color = "#E69F00") +
+  # add a linear model : https://stackoverflow.com/questions/15633714/adding-a-regression-line-on-a-ggplot
+  # and see: https://stackoverflow.com/questions/9613578/change-standard-error-color-for-geom-smooth
+  # geom_smooth(method='lm',span = 0.9, 
+  #             lty=1,size=0.3,
+  #             aes(fill = smplTp,
+  #                 color = smplTp)) +
+  # 
+  # geom_smooth(method='lm',span = 0.9, 
+  #             lty=1,size=0.3, fill="orchid4", color="violet") +
+  # 
+  #facet_wrap(vars(speciesNm ), ncol = 4) +
+  #theme(strip.text = element_text(face = "italic")) +
+  theme(legend.position="bottom") +
+  # # https://stackoverflow.com/questions/17073772/ggplot2-legend-on-top-and-margin
+  # theme(
+  #   legend.margin=unit(-0.6,"cm"),
+  #   #plot.background=element_rect(fill="red"),
+  #   legend.position="top") +
+  # guides(fill=guide_legend(title.position="top")) +
+  #labs(title = paste0("eDNA levels for ",spcNm,"-assay fra 2021")) +
+  labs(color='type') +
+  labs(fill='targ FL') +
+  labs(shape='type') 
+#plt08
+# change background of plot
+# see : https://stackoverflow.com/questions/6736378/how-do-i-change-the-background-color-of-a-plot-made-with-ggplot2
+plt08 <- plt08 + theme(panel.background = element_rect(fill='white'))  
+plt08
+fgNm08 <- paste0(wd00,"/",wdout,"/Fig14_v01_comb_scatterplot.png")
+# save the plot as png file if 'bSaveFigures' is set to be TRUE
+bSaveFigures <- T
+if(bSaveFigures==T){
+  ggsave(plt08,file=fgNm08,
+         width=210*1.2,height=297,
+         #width=210,height=297,
+         #width=297,height=210,
+         units="mm",dpi=300)
+}
+
+#___

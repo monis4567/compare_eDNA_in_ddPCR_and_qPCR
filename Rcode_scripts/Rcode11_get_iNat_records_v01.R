@@ -4,7 +4,7 @@
 #____________________________________________________________________________#
 # R-code provided for the project:
 # “comparison of qPCR and ddPCR”
-# Authors: Steen Wilhelm Knudsen.
+
 # Change the working directory to a path on your own computer , and run
 # the individual parts below to reproduce the diagrams presented in the paper
 #
@@ -43,8 +43,6 @@ library(ggplot2)
 library(scales)
 library(rinat)
 #define working directory
-# wd00 <- "/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2022/ddPCR_qPCR_MST"
-# wd00  <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
 wd00   <- getwd()
 #define input file  directory
 wd01 <- "data/data_ddpcr_runs"

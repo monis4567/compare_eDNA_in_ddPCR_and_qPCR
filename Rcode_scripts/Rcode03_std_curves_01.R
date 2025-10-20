@@ -2,22 +2,6 @@
 # -*- coding: utf-8 -*-
 
 #____________________________________________________________________________#
-# R-code provided for the project:
-# 
-# “MONIS6”
-#
-# Authors: Steen Wilhelm Knudsen.
-
-# Change the working directory to a path on your own computer , and run
-# the individual parts below to reproduce the diagrams presented in the paper
-#
-# All input data required needs to be available as csv-files in the same directory 
-# as this R-code use for working directory.
-#
-# Occassionally the code will have difficulties producing the correct diagrams,
-# if the packages and libraries are not installed.
-# Make sure the packages are installed, and libraries are loaded, if the R-code
-# fails in producing the diagrams.
 #
 #________________IMPORTANT!!_________________________________________________#
 # (1)
@@ -99,10 +83,6 @@ library(tableHTML)
 # }
 library(envDocument)
 
-#name working directory
-#wd00 ="/home/hal9000/Documents/Documents/NIVA_Ansaettelse_2021/MONIS6/Analysis_MONIS5_to_6"
-#wd00 = "/Users/steenknudsen/Documents/Documents/NIVA_Ansaettelse_2020/NOVANA_proever_2018_2019"
-#wd00 <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
 wd00 <- getwd()
 # define dir w output files
 wd03 <- "data/MONIS6_2021_data"
@@ -824,8 +804,8 @@ smpls02.1$log.10_copies_L <- log10(smpls02.1$copies_per_Lwater_plone)
 pth_and_fl <- paste(wd00,"/",wd05,"/table05_1_MONIS6_eDNA_smpls02.1.csv", sep="")
 pth_and_fl2 <- paste(wd00,"/",wd05,"/table05_2_MONIS6_eDNA_std_crv_efficiencies.csv", sep="")
 #write out a csv-file
-write.table(smpls02.1, file = pth_and_fl, sep = ";")
-write.table(df_qprps2, file = pth_and_fl2, sep = ";")
+write.table(smpls02.1, file = pth_and_fl, sep = ";", row.names = FALSE)
+write.table(df_qprps2, file = pth_and_fl2, sep = ";", row.names = FALSE)
 
 
 

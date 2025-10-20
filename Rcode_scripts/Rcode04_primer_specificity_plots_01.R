@@ -6,8 +6,6 @@
 # 
 #
 # “Standard dilution curves from qPCR MxPro txt files”
-#
-# Authors: Steen Wilhelm Knudsen.
 
 #
 
@@ -152,8 +150,6 @@ fillNAgaps <- function(x, firstBack=FALSE) {
 
 
 # # set working directory
-# wd00 <- "/Users/steenknudsen/Documents/Documents/MS_amphibian_eDNA_assays/MS_suppm_amphibia_eDNA"
-# wd00 <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
 wd00 <- getwd()
 # define dir w output files
 wd03 <- "data/MONIS6_2021_data"

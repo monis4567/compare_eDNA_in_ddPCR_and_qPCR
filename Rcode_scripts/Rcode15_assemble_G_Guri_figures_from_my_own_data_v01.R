@@ -424,8 +424,9 @@ legend <- cowplot::plot_grid(p1_leg_leg,
 
 p1 <- cowplot::plot_grid(pp1,pp2,nrow = 2,
                          rel_heights = c(4.7,5.3),
-                         labels = c("a","b"),
-                         label_size = 20, 
+                         labels = c("(a)","(b)"),
+                         vjust= 1.09,
+                         label_size = 24, 
                          align = "v")
 Figure_1 <- cowplot::plot_grid(p1,
                                legend,nrow = 1,
@@ -564,7 +565,9 @@ pp2 <- pp2 +
 # Combine the main plot and the legend
 p1 <- cowplot::plot_grid(pp1, pp2, nrow = 2, 
                          rel_heights = c(1, 1), 
-                         labels = c("a", "b"), label_size = 20, align = "v")
+                         labels = c("(a)", "(b)"),
+                         vjust= 1.09,
+                         label_size = 24, align = "v")
 Figure_1 <- cowplot::plot_grid(p1, legend, nrow = 1, ncol = 2, rel_widths = c(7, 1.8))
 
 # Display the final figure
@@ -747,7 +750,7 @@ if (bl3MakePlot==T){
           axis.title.x = element_text(size = 19),
           axis.text.x = element_text(size=18),
           axis.text.y=element_text(size=14))+
-    ylab(expression("95% Credible Interval range"))+
+    ylab(expression("95% Credible\n Interval range"))+
     xlab("Modelled concentration (copies/µL)")
   
   pp2.l3}
@@ -781,7 +784,7 @@ if (bm3MakePlot==T){
           axis.title.x = element_text(size = 19),
           axis.text.x = element_text(size=18),
           axis.text.y=element_text(size=14))+
-    ylab(expression("95% Credible Interval range"))+
+    ylab(expression("95% Credible \nInterval range"))+
     xlab("Modelled concentration (copies/µL)")
   
   pp2.m3}
@@ -874,8 +877,9 @@ legend <- cowplot::plot_grid(p1_leg_leg,p2_leg_leg,nrow = 2)
 p1 <- cowplot::plot_grid(pp1,pp2,nrow=2,
                          align = "v",
                          rel_heights = c(4,3),
-                         label_size = 20,
-                         labels = c("a","b"),
+                         label_size = 24,
+                         labels = c("(a)","(b)"),
+                         vjust= 1.2,
                          label_x = -0.003)
 Figure_2 <- cowplot::plot_grid(p1,
                                legend,

@@ -162,7 +162,7 @@ sites <- sites %>%
 if(exists("world")==F){
   world <- rworldmap::getMap(resolution = "high")
   world <- sf::st_as_sf(world) %>%
-    select(ADMIN)}
+    dplyr::select(ADMIN)}
 # Define map boundaries and coordinate reference system
 map_bnds <- list(x0 = 7, x1 = 17, y0 = 54.4, y1 = 58.2)
 map_crs <- sf::st_crs(4326)
@@ -263,7 +263,7 @@ create_plot <- function(data_subset, mxuch, y_max) {
 # Get unique machine values
 unique_machines <- unique(df_c5$machine)
 mxuniqch <- length(df_c5$spcNm %>% unique())
-str(df_c5)
+#str(df_c5)
 # subset the data frame by machine and season
 df_c5.s1.m1 <- filter(df_c5, smpl.season == "1st season", machine == unique_machines[1])
 df_c5.s1.m2 <- filter(df_c5, smpl.season == "1st season", machine == unique_machines[2])
@@ -312,19 +312,24 @@ height_plot <- ggplot(height_df, aes(x = 1, y = height, fill = height)) +
 legend_height <- cowplot::get_legend(height_plot)
 
 # Combine the four plots into a single plot
-cmb_plt <- plot_grid(
-  plot1 + theme(legend.position = "none", plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
-  plot2 + theme(legend.position = "none", plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
-  plot3 + theme(legend.position = "none", plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
-  plot4 + theme(legend.position = "none", plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
+cmb_plt <- cowplot::plot_grid(
+  plot1 + theme(legend.position = "none", 
+                plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
+  plot2 + theme(legend.position = "none",
+                plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
+  plot3 + theme(legend.position = "none",
+                plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
+  plot4 + theme(legend.position = "none", 
+                plot.margin = unit(c(0, 0, 0, 0), units = "pt")),
   ncol = 2,  # Organizing into a 2x2 grid
-  labels = c("a", "b", "c", "d"),  # Adding subplot labels
+  labels = c("(a)", "(b)", "(c)", "(d)"),  # Adding subplot labels
   label_size = 14,
+  
   rel_widths = c(1, 1),  # Reduce space for subplots (closer together)
   rel_heights = c(1, 1), # Reduce height for subplots (closer together)
   align = 'v',  # Align vertically to minimize the gap
   axis = "tb",  # Align axes at top and bottom
-  hjust = -1,   # Move the labels to a better position
+  hjust = -0.1,   # Move the labels to a better position
   vjust = 0.98,  # Adjust label position to move it up
   nrow = 2      # Force to two rows
 )
@@ -332,7 +337,8 @@ cmb_plt <- plot_grid(
 # Combine the plots and legends
 combined_plot <- plot_grid(
   cmb_plt,
-  plot_grid(legend_species, legend_height, ncol = 1, rel_heights = c(0.6, 0.4)),
+  plot_grid(legend_species, legend_height, ncol = 1, 
+            rel_heights = c(0.6, 0.4)),
   ncol = 2,
   rel_widths = c(1.7, 0.3),
   rel_heights = c(2, 0.3),

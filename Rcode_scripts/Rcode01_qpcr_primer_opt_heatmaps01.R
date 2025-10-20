@@ -3,7 +3,6 @@
 
 # R-code  for :
 # “Infering opitmal primer concentrations from qPCR MxPro xls files”
-# Authors: Steen Wilhelm Knudsen.
 
 # # to use ggplot
 # if(!require(ggplot2)){
@@ -47,8 +46,6 @@ library(plyr)
 letter2num <- function(x) {utf8ToInt(x) - utf8ToInt("a") + 1L+32}
 # set working directory
 wd00 <- getwd()
-#wd00 <- "/Users/steenknudsen/Documents/Documents/MS_amphibian_eDNA_assays/MS_suppm_amphibia_eDNA"
-#wd00 <- "/home/hal9000/Documents/shrfldubuntu18/compare_eDNA_in_ddPCR_and_qPCR"
 
 # setwd (wd00)
 # getwd()
